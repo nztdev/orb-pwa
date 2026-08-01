@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0E14">
+<title>Orb — A Guided Self-Inquiry Session</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- Persistent orb canvas -- the signature element, present across every screen -->
+<canvas id="orb-canvas" aria-hidden="true"></canvas>
+
+<!-- Persistent exit/ground control -- always available once a session is entered -->
+<button id="ground-now" class="ground-now hidden" aria-label="Stop and ground now">
+  <span class="ground-now__dot"></span> Ground me now
+</button>
+
+<main id="app" role="main">
+
+  <!-- SCREEN: welcome -->
+  <section class="screen" data-screen="welcome" aria-hidden="false">
+    <p class="eyebrow">A guided practice, not a performance</p>
+    <h1 class="display">Orb</h1>
+    <p class="lede">
+      A short, disclosed self-inquiry session. Everything it does is explained before it happens.
+      Nothing here is a surprise, and nothing continues without your say.
+    </p>
+    <button class="btn btn--primary" data-action="go-disclosure">Learn how this works</button>
+  </section>
+
+  <!-- SCREEN: disclosure — full transparency about mechanism -->
+  <section class="screen" data-screen="disclosure" aria-hidden="true">
+    <p class="eyebrow">Before anything else</p>
+    <h2 class="display display--sm">What this actually does</h2>
+    <div class="disclosure-list">
+      <div class="disclosure-item">
+        <span class="disclosure-item__mark">Visuals</span>
+        <p>A slow, smooth generative light field, paced to your breath. No flashing, no strobe, no frequencies associated with seizure risk.</p>
+      </div>
+      <div class="disclosure-item">
+        <span class="disclosure-item__mark">Audio</span>
+        <p>A single soft ambient tone, the same in both ears. No competing scripts, no hidden messaging, no dichotic tracks.</p>
+      </div>
+      <div class="disclosure-item">
+        <span class="disclosure-item__mark">Language</span>
+        <p>Plain, direct prompts inviting open attention — for example, "notice where your attention rests." Nothing designed to bypass your judgment.</p>
+      </div>
+      <div class="disclosure-item">
+        <span class="disclosure-item__mark">Effect</span>
+        <p>Some people experience a loosening of the usual sense of "self as separate from experience." This is a known, generally benign effect of sustained open attention — similar to deep meditation. It is not guaranteed and not the goal; comfort is the goal.</p>
+      </div>
+      <div class="disclosure-item">
+        <span class="disclosure-item__mark">Control</span>
+        <p>A "Ground me now" button is on screen at all times once a session starts. It ends the session immediately and starts a short grounding sequence.</p>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn--ghost" data-action="go-welcome">Back</button>
+      <button class="btn btn--primary" data-action="go-screening">Continue to a few questions</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: screening — real gate, not a checkbox -->
+  <section class="screen" data-screen="screening" aria-hidden="true">
+    <p class="eyebrow">Step 1 of 2</p>
+    <h2 class="display display--sm">A few honest questions</h2>
+    <p class="lede lede--tight">These decide which version of the session is right for you. There's no wrong answer — this only changes what you're offered next.</p>
+
+    <form id="screening-form" class="screening-form">
+      <fieldset class="q">
+        <legend>Have you ever been diagnosed with epilepsy or a seizure disorder, or do you have a personal or family history of seizures?</legend>
+        <label><input type="radio" name="epilepsy" value="yes" required> Yes</label>
+        <label><input type="radio" name="epilepsy" value="no"> No</label>
+        <label><input type="radio" name="epilepsy" value="unsure"> Not sure</label>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Have you been diagnosed with a psychotic disorder (e.g. schizophrenia, bipolar with psychotic features), or a dissociative disorder?</legend>
+        <label><input type="radio" name="psychosis" value="yes" required> Yes</label>
+        <label><input type="radio" name="psychosis" value="no"> No</label>
+        <label><input type="radio" name="psychosis" value="unsure"> Not sure</label>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>In the last month, have you experienced ongoing derealization or depersonalization (feeling unreal, detached from your body, or "outside yourself") that concerned you?</legend>
+        <label><input type="radio" name="dpdr" value="yes" required> Yes</label>
+        <label><input type="radio" name="dpdr" value="no"> No</label>
+      </fieldset>
+
+      <fieldset class="q">
+        <legend>Are you currently in a stable state — not in crisis, not under the influence of substances, and somewhere you feel safe to sit quietly for several minutes?</legend>
+        <label><input type="radio" name="stable" value="yes" required> Yes</label>
+        <label><input type="radio" name="stable" value="no"> No</label>
+      </fieldset>
+
+      <button type="submit" class="btn btn--primary">See what's right for me</button>
+    </form>
+  </section>
+
+  <!-- SCREEN: screening result — routes to gentle or standard, never "unlocked/blocked" tone -->
+  <section class="screen" data-screen="screening-result" aria-hidden="true">
+    <p class="eyebrow" id="result-eyebrow">Step 2 of 2</p>
+    <h2 class="display display--sm" id="result-heading"></h2>
+    <p class="lede lede--tight" id="result-body"></p>
+    <div class="btn-row" id="result-actions"></div>
+  </section>
+
+  <!-- SCREEN: consent — explicit, specific, revocable -->
+  <section class="screen" data-screen="consent" aria-hidden="true">
+    <p class="eyebrow">Your explicit consent</p>
+    <h2 class="display display--sm">Ready when you are</h2>
+    <ul class="consent-checklist" id="consent-checklist">
+      <li><label><input type="checkbox" required> I understand what the visuals, audio, and language will do, as described.</label></li>
+      <li><label><input type="checkbox" required> I understand I can press "Ground me now" at any point to stop immediately.</label></li>
+      <li><label><input type="checkbox" required> I'm choosing this for myself, right now, without pressure.</label></li>
+    </ul>
+    <div class="btn-row">
+      <button class="btn btn--ghost" data-action="go-screening">Back</button>
+      <button class="btn btn--primary" id="begin-session-btn" disabled data-action="go-customize">Continue</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: customize — session shape, chosen after suitability is known -->
+  <section class="screen" data-screen="customize" aria-hidden="true">
+    <p class="eyebrow">Shape the session</p>
+    <h2 class="display display--sm">Make it yours</h2>
+
+    <div class="setting">
+      <label class="setting__label" for="duration">Length</label>
+      <input type="range" id="duration" min="3" max="15" step="1" value="6">
+      <output class="setting__value" id="duration-value" for="duration">6 minutes</output>
+    </div>
+
+    <div class="setting">
+      <label class="setting__label" for="intensity">Visual depth</label>
+      <input type="range" id="intensity" min="1" max="3" step="1" value="2">
+      <output class="setting__value" id="intensity-value" for="intensity">Balanced</output>
+    </div>
+
+    <div class="setting">
+      <span class="setting__label" id="tone-label">Ambient tone</span>
+      <div class="tone-options" role="radiogroup" aria-labelledby="tone-label">
+        <button type="button" class="tone-btn tone-btn--active" data-tone="low">Low drone</button>
+        <button type="button" class="tone-btn" data-tone="mid">Open mid</button>
+        <button type="button" class="tone-btn" data-tone="none">Silent</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn--ghost" data-action="go-consent">Back</button>
+      <button class="btn btn--primary" data-action="go-session">Begin session</button>
+    </div>
+  </section>
+
+  <!-- SCREEN: session — the practice itself -->
+  <section class="screen screen--session" data-screen="session" aria-hidden="true">
+    <p class="session-timer" id="session-timer">6:00</p>
+    <p class="session-prompt" id="session-prompt">Settle in. Notice your breath, without changing it.</p>
+  </section>
+
+  <!-- SCREEN: grounding -->
+  <section class="screen" data-screen="grounding" aria-hidden="true">
+    <p class="eyebrow">Coming back</p>
+    <h2 class="display display--sm">You're here, fully</h2>
+    <p class="lede lede--tight" id="grounding-text">Name three things you can see. Feel your feet on the floor. Take one slower breath out.</p>
+    <p class="grounding-note">If anything feels unsettled, that's worth talking through with someone you trust or a professional — not something to push past alone.</p>
+    <button class="btn btn--primary" data-action="go-welcome">Finish</button>
+  </section>
+
+</main>
+
+<script src="js/app.js" type="module"></script>
+</body>
+</html>
