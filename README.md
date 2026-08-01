@@ -103,11 +103,3 @@ and ambient tone (`low` / `mid` / `none`). All three are read by
 1. Push this folder to a repo.
 2. Repo Settings → Pages → deploy from the branch/root.
 3. Done — no build step, no server.
-
-## What's intentionally *not* included
-No dichotic audio engine, no photic-driving shader, no Ericksonian
-suggestion scripting, no "illusion of control then take it away" latency
-injection. These were part of the original concept but drop the risk
-profile from "a calming, disclosed practice" to "an unsupervised
-psychological intervention on strangers" — see the conversation this app
-was designed in response to for the fuller reasoning.
