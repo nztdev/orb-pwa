@@ -67,6 +67,27 @@ body {
   display: block;
 }
 
+/* Every screen except the session itself gets a readable panel behind its
+   content. The orb is meant to stay visible as ambience, but text needs
+   guaranteed contrast regardless of where the orb's bright core happens to
+   be — a transparent screen let the glow sit directly under form text and
+   made it unreadable in places. */
+.screen:not(.screen--session) {
+  background: rgba(10, 14, 20, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 28px;
+  padding: 44px 40px;
+}
+
+@media (max-width: 480px) {
+  .screen:not(.screen--session) {
+    padding: 32px 24px;
+    border-radius: 20px;
+  }
+}
+
 @keyframes rise {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
